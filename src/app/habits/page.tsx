@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { getAllHabits } from "@/db/queries";
 import Link from "next/link";
+import SortableHabitList from "@/components/SortableHabitList";
 
 export default async function HabitsPage() {
   const habits = await getAllHabits();
@@ -28,27 +29,7 @@ export default async function HabitsPage() {
           </Link>
         </div>
       ) : (
-        <ul className="flex flex-col gap-3">
-          {habits.map((habit) => (
-            <li key={habit.id}>
-              <Link
-                href={`/habits/${habit.id}`}
-                className="flex items-center gap-4 bg-zinc-900 hover:bg-zinc-800 rounded-xl p-4 border border-zinc-800 transition-colors"
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
-                  style={{ backgroundColor: habit.color + "33", color: habit.color }}
-                >
-                  {habit.icon}
-                </div>
-                <span className="flex-1 text-sm font-medium text-white">{habit.name}</span>
-                <svg className="w-4 h-4 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <SortableHabitList initialHabits={habits} />
       )}
     </div>
   );

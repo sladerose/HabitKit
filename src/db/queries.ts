@@ -1,9 +1,12 @@
 import { db } from "./index";
 import { habits, habitLogs } from "./schema";
-import { eq, desc, and, gte, lte } from "drizzle-orm";
+import { eq, desc, and, gte, lte, asc, sql, max } from "drizzle-orm";
 
 export async function getAllHabits() {
-  return db.select().from(habits).orderBy(desc(habits.createdAt));
+  return db.select().from(habits).orderBy(
+    sql`${habits.sortOrder} ASC NULLS LAST`,
+    asc(habits.createdAt)
+  );
 }
 
 export async function getHabitById(id: string) {
@@ -17,7 +20,9 @@ export async function createHabit(data: {
   icon: string;
   reminderTime?: string;
 }) {
-  const rows = await db.insert(habits).values(data).returning();
+  const [{ maxOrder }] = await db.select({ maxOrder: max(habits.sortOrder) }).from(habits);
+  const sortOrder = (maxOrder ?? -1) + 1;
+  const rows = await db.insert(habits).values({ ...data, sortOrder }).returning();
   return rows[0];
 }
 
@@ -31,6 +36,14 @@ export async function updateHabit(
 
 export async function deleteHabit(id: string) {
   await db.delete(habits).where(eq(habits.id, id));
+}
+
+export async function reorderHabits(ids: string[]) {
+  await Promise.all(
+    ids.map((id, index) =>
+      db.update(habits).set({ sortOrder: index }).where(eq(habits.id, id))
+    )
+  );
 }
 
 export async function getLogsForHabit(habitId: string, from: string, to: string) {

@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, date, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, date, uniqueIndex, integer } from "drizzle-orm/pg-core";
 
 export const habits = pgTable("habits", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -6,6 +6,7 @@ export const habits = pgTable("habits", {
   color: text("color").notNull().default("#6366f1"),
   icon: text("icon").notNull().default("✦"),
   reminderTime: text("reminder_time"),
+  sortOrder: integer("sort_order"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

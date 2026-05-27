@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getAllHabits } from "@/db/queries";
 import Link from "next/link";
 

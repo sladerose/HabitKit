@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getHabitById, getLogsForHabit } from "@/db/queries";
 import { getLast365Days, computeStreak, computeLongestStreak, completionRate } from "@/lib/utils";
 import { notFound } from "next/navigation";

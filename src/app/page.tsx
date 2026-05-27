@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getAllHabits, getLogsForDate } from "@/db/queries";
 import { todayISO } from "@/lib/utils";
 import { format } from "date-fns";
